@@ -28,4 +28,14 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> getEmployee(@PathVariable Long id) {
         return new ResponseEntity<>(employeeService.getEmployeeById(id), HttpStatus.OK);
     }
+    @PutMapping("employees/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeDto employeeDto, @PathVariable("id") Long id) {
+        EmployeeDto response = employeeService.updateEmployee(employeeDto, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @DeleteMapping("employees/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long id) {
+        employeeService.deleteEmployee(id);
+        return new ResponseEntity<>("Employee deleted", HttpStatus.OK);
+    }
 }

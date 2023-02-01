@@ -20,17 +20,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         Employee employee = new Employee();
+
         employee.setFirstName(employeeDto.getFirstName());
         employee.setLastName(employeeDto.getLastName());
         employee.setPhoneNumber(employeeDto.getPhoneNumber());
-
         Employee newEmployee = employeeRepository.save(employee);
 
-        EmployeeDto employeeResponse = new EmployeeDto();
-        employeeResponse.setId(newEmployee.getId());
-        employeeResponse.setFirstName(newEmployee.getFirstName());
-        employeeResponse.setLastName(newEmployee.getLastName());
-        employeeResponse.setPhoneNumber(newEmployee.getPhoneNumber());
+       EmployeeDto employeeResponse = mapToDto(newEmployee);
+
 
         return employeeResponse;
 
@@ -48,17 +45,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeRepository.findById(id).orElseThrow(()->
                 new EmployeeNotFoundException("Employee couldn't be found"));
 
+
         return mapToDto(employee);
     }
 
     @Override
-    public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
-        return null;
+    public EmployeeDto updateEmployee(EmployeeDto employeeDto,Long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(()->
+                new EmployeeNotFoundException("Employee couldn't be found"));
+        employee.setFirstName(employeeDto.getFirstName());
+        employee.setLastName(employeeDto.getLastName());
+        employee.setPhoneNumber(employeeDto.getPhoneNumber());
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return mapToDto(updatedEmployee);
     }
 
     @Override
     public void deleteEmployee(Long id) {
-
+        Employee employee = employeeRepository.findById(id).orElseThrow(()->
+                new EmployeeNotFoundException("Employee couldn't be found"));
+        employeeRepository.delete(employee);
     }
 
     private EmployeeDto mapToDto(Employee employee) {
